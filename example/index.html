@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>MVC.js Example</title>
+    <link rel="stylesheet" href="mvc-example.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <header>
+      <h1>MVC.js Examples</h1>
+    </header>
+
+    <main id="example">
+
+    </main>
+    <div id="examples">
+      <!-- instantUpdate -->
+      <div id="example_instantUpdate">
+        <h3 id="instantUpdate_output">Example Text</h3>
+        <div>
+          <input type="text" id="instantUpdate_input"  class="form-control" />
+        </div>
+      </div>
+      <!-- instantCount -->
+      <div id="example_instantCount">
+        <h3 id="instantCount_output">
+          0
+        </h3>
+        <input type="text" id="instantCount_input"  class="form-control" />
+      </div>
+      <!-- instantTransfer -->
+      <div id="example_instantTransfer">
+        <h3> Select Items:</h3>
+        <select id="instantTransfer_input"  class="form-control" multiple >
+
+        </select>
+        <h3> Not Selected:</h3>
+        <div id="instantTransfer_from" class="border" style="background-color:white;padding:15px;">
+
+        </div>
+        <h3> Selected:</h3>
+        <div id="instantTransfer_to" class="border" style="background-color:white;padding:15px;">
+
+        </div>
+      </div>
+      <!-- instantElement -->
+      <div id="example_instantElement">
+        <div class="input-group mb-3">
+  <input type="text" class="form-control" placeholder="Item to add" id="instantElement_input" >
+  <div class="input-group-append">
+    <button class="btn btn-secondary" type="button" id="instantElement_btn">Add</button>
+  </div>
+</div>
+
+        <ul id="instantElement_target">
+
+        </ul>
+
+      </div>
+      <!-- instantDimensions -->
+      <div id="example_instantDimensions">
+        <div>
+          <label for="instantDimensions_width">Width</label>
+          <input type="range" id="instantDimensions_width" class="form-control-range" min="0" max="500" value="250">
+
+        </div>
+        <div>
+            <label for="instantDimensions_height">Height</label>
+          <input type="range" id="instantDimensions_height" class="form-control-range" min="0" max="500" value="250">
+
+        </div>
+        <div id="instantDimensions_target">
+
+        </div>
+      </div>
+      <!-- instantFilter -->
+      <div id="example_instantFilter">
+        <input type="text" id="instantFilter_input"  class="form-control" />
+        <div id="instantFilter_target">
+
+        </div>
+        <pre id="arr">
+
+        </pre>
+      </div>
+
+      <div id="example_todoPriority">
+        <form id="addTask">
+          <div class="form-group row">
+            <div class="col-sm-3">
+          <input id="task" class="form-control" placeholder="Task" />
+        </div><div class="col-sm-3">
+          <input id="priority" class="form-control"  type="number" min="0" placeholder="Priority" /></div><div class="col-sm-3">
+          <button class="btn btn-secondary">Add</button></div></div>
+        </form>
+        <div id="list"></div>
+      </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/mode/javascript/javascript.min.js"></script>
+    <script src="../src/mvc.js"></script>
+    <script src="../src/assets/utils.js"></script>
+    <script src="examples.js"></script>
+    <script src="mvc-example.js"></script>
+  </body>
+</html>
