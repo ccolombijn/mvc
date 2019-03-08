@@ -7,6 +7,18 @@ const example = (() => {
   exampleModuleNames = utils.obj(examples).properties,
   exampleModuleFunctions = utils.obj(examples).values,
 //...........................................................................
+  moduleSelect = view.element("moduleSelect")
+  let current
+
+  for(let item in exampleModuleNames){
+    let moduleName = exampleModuleNames[item];
+    view.add(moduleSelect, "option",{ value : exampleModuleNames[item] },exampleModuleNames[item])
+
+  }
+  controller.add( moduleSelect, "change", (event) => {
+    view.element(`#example_${current}`).innerHTML = view.element("#exampleShow").innerHTML
+    runExample( event.target.value )
+  })
   exampleOverview = () => {
 
     view.set(main, "");
@@ -22,12 +34,9 @@ const example = (() => {
       )
       view.add(moduleElement, "hr","")
       view.add(moduleElement, "p", {class:"lead"},exampleModuleFunctions[module]().description)
-      let moduleExample = view.add(
-        moduleElement,
-        "pre", { class : "code" } )
+      let moduleExample = view.add(moduleElement,"pre", { class : "code" } )
         .innerHTML = utils.format(exampleModuleFunctions[module]().module.toString())
-      //console.log(utils.occurence(exampleModuleFunctions[module]().module.toString(),'view.add'))
-      //let myCodeMirror = CodeMirror(moduleExample);
+
       controller.add(
         view.add(
           moduleElement,
@@ -42,7 +51,7 @@ const example = (() => {
   },
   //...........................................................................
     runExample = (example) => {
-
+      current = example;
       window.scrollTo(0, 0);
       const module = examples[example],
       exampleElems = view.element('#examples'),
@@ -56,7 +65,7 @@ const example = (() => {
       view.add(main, "hr","")
       view.add(main, "p",module().description)
       let overviewBtn = view.add( main,"button",{ class : 'btn btn-primary'},"Back to Overview")
-      view.add(main,"div",{ class : "example" }).innerHTML = exampleElemHTML;
+      view.add(main,"div",{ id : "exampleShow",class : "example" }).innerHTML = exampleElemHTML;
 
       view.add(main,"h3","Javascript")
       let code = view.add(main,"pre",{ class : "code" }).innerHTML = utils.format(module().module.toString())
