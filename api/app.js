@@ -6,8 +6,7 @@ const api = (function(){
   const mysql = require( 'mysql' )
   const express = require( 'express' )
   const app = express()
-  const bodyParser = require( 'body-parser' )
-
+  const bodyParser = require( 'body-parser')
   app.use( bodyParser.json() )
   app.use( function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*")
@@ -15,6 +14,7 @@ const api = (function(){
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
     next()
   })
+
   // config
   const config = {
     db : {
@@ -22,65 +22,43 @@ const api = (function(){
       user: 'root',
       password: 'root',
       database: 'quiz'
-    },
-    routes : ['get/game','get/game/id' ]
-  }
-  const connection = mysql.createConnection( config.db )
-
-
-  /* -----------------------------------------------------------------------------
-  * api.get
-  */
-  // api.get( { table : 'tables'[, key : 'id'] } )
-  const get = function( args, callback ){
-    const table = args.table,
-    key = args.key
-    if( !key )
-    if( key ){
-      app.get( `/api/${table}/:${key}`, function( req, res ) {
-
-        let pointer = +req.params[ key ]
-        // bad request
-        if( pointer.indexOf( '=' ) ){
-          res.setHeader('Content-Type', 'application/json')
-          res.status(400).end()
-          return
-        }
-        connection.query(`SELECT * FROM ${table} where ${key}=?`, pointer, ( err, rows ) => {
-          if (!err) {
-            let record = rows[0];
-            res.setHeader('Content-Type', 'application/json')
-            record ? res.end(JSON.stringify( record ) ) : res.status(404).end()
-          } else {
-            throw err
-          }
-        })
-      })
-    } else {
-      app.get(`/api/${table}`, function(req, res) {
-
-        res.setHeader('Content-Type', 'application/json')
-
-        connection.query(`SELECT * FROM ${table}`, ( err, records ) => {
-          if (!err) {
-            res.end( JSON.stringify(records) )
-          } else {
-            throw err
-          }
-        })
-      })
     }
-    if( callback ) callback()
   }
-  /* -----------------------------------------------------------------------------
-  * api.put
-  */
 
-  const put = function( args, callback ){
-    const table = args.table,
-    fields = args.fields,
-    key = args.key;
+  const connection = mysql.createConnection( config.db )
+  const requests = [
+    { table : '', key : '' }
+  ]
+  for( let request of requests ){
+    let table = request.table
+    let key = request.key
 
+    // get
+    app.get( `/api/${table}/:${key}`, function( req, res ) {
+      let key =+ req.params[ key ]
+      connection.query(`SELECT * FROM ${table} where ${key}=?`, key, ( err, rows ) => {
+        if (!err) {
+          let record = rows[0];
+          res.setHeader('Content-Type', 'application/json')
+          record ? res.end(JSON.stringify( record ) ) : res.status(404).end()
+        } else {
+          throw err
+        }
+      })
+    })
+
+    app.get(`/api/${table}`, function(req, res) {
+      res.setHeader('Content-Type', 'application/json')
+      connection.query(`SELECT * FROM ${table}`, ( err, records ) => {
+        if (!err) {
+          res.end( JSON.stringify(records) )
+        } else {
+          throw err
+        }
+      })
+    })
+
+    // put
     app.put( `/api/${table}/:${key}`, function( req, res ) {
 
       let pointer = +req.params[ key ]
@@ -122,20 +100,10 @@ const api = (function(){
         }
       })
     })
-    if( callback ) callback()
-  }
 
-  /* -----------------------------------------------------------------------------
-  * api.drop
-  */
-  const drop = function( args, callback ){
-    const table = args.table,
-    fields = args.fields,
-    key = args.key;
+    // delete
     app.delete(`/api/${table}/:${key}`, function( req, res ) {
-      let pointer = +req.params[ key ]
-
-      connection.query( `DELETE FROM ${table} WHERE ${key} = ?`, [id], ( err, result ) => {
+      connection.query( `DELETE FROM ${table} WHERE ${key} = ?`, parseInt(req.params[ key ]), ( err, result ) => {
         if (!err) {
           res.status(204).end();
         } else {
@@ -143,19 +111,12 @@ const api = (function(){
         }
       })
     })
-    if( callback ) callback()
-  }
+
+  }// for( let request of requests ){
+
 
   const server = app.listen(8081, () => {
-
-
-    for( let route of config.routes ){
-      const endpoint = route.split( '/' )
-      if( endpoint[0] === 'get' ) endpoint[2]
-      ? get( { table : endpoint[1], key : endpoint[2] } )
-      : get( { table : endpoint[1] } );
-
-    }
+    console.log( 'Server listening on port 8081')
   })
 
 })()
