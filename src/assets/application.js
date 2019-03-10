@@ -1,81 +1,60 @@
-
-
-/*
-const example = (function(){
-
-  const main = view.element('div#main')
-  const mainNav = view.element('ul#mainNav')
-//...........................................................................
-  const exampleModuleOne = () => {
-    model.data['exampleModuleOneData'] = []
-    const main = (){
-      view.set( main, 'This is main of exampleModuleOne')
-    },
-    second = (){
-      view.set( main, 'This is second of exampleModuleOne')
-    }
-    return {
-      label : 'Example Module One',
-      default : main,
-      main : main,
-      second : second
-    }
-  },
-//...........................................................................
-  exampleModuleTwo = () => {
-    const main = (){
-      view.set( main, 'This is main of exampleModuleTwo')
-    },
-    second = (){
-      view.set( main, 'This is second of exampleModuleTwo')
-    }
-    return {
-      label : 'Example Module Two',
-      default : main,
-      main : main,
-      second : second
-    }
-  }
-//...........................................................................
-  return {
-    one : exampleModuleOne,
-    two : exampleModuleTwo,
-    main : main,
-    mainNav : mainNav,
-    default : exampleModuleOne
-  }
-
-});
-
-application.init( example );
-*/
-
+'use strict'
 const application = (function(){
-  let applicationModule,applicationObj,main,mainNav,moduleNames,moduleFunctions,filePath;
-  const load = () => {
-    const route = location.hash.slice(1).split('/')
+  let applicationModule,applicationObj,main,menu,moduleNames,moduleFunctions,filePath;
+  const route = () => location.hash.slice(1).split('/'),
+  load = (event) => {
+    if( event ){ // event is only provided by window.hashchange, not on init
+
+    }
     if(route){
-      route[1] ? application[route[0]]()[route[1]]() : application[route[0]].default()
+      route()[1]
+      ? applicationModule[route()[0]]()[route()[1]](route()[2])
+      : applicationModule[route()[0]].default()
     }else{
-      application.default()
+      applicationModule.default()
     }
   },
   nav = () => {
     for( let item of moduleNames){
-      let navMenuItem = view.add( mainNav, "li",{ id : item })
-      view.add( navMenuItem, "a", { href : `#${item}`}, application[ item ].label)
+      if( applicationModule[ item ].label ){
+        let menuItem = view.add( menu, "li",{ id : item })
+        view.add( menuItem, "a", { href : `#${item}`}, applicationModule[ item ].label)
+      }
     }
-    load()
   },
   init = ( application ) => {
     applicationModule = application;
     applicationObj = utils.obj(application);
-    main = view.element(application.main);
-    mainNav = view.element(application.mainNav);
+    main = view.element(applicationModule.config.main);
+    menu = view.element(applicationModule.config.menu);
     moduleNames = applicationObj.properties;
     moduleFunctions = applicationObj.values;
     nav()
+    load()
+  },
+  overview = ( args ) => {
+    //view.set( applicationModule.config.main,
+    let targetElement
+    args.target
+    ? targetElement = args.target
+    : targetElement = applicationModule.config.main;
+
+
+      UI.overview({
+        module : args.module,
+        columns : args.columns,
+        headers : args.headers,
+        model : model.data[args.module],
+        config : applicationModule.config,
+        target : targetElement
+      })
+
   }
-  window.onhashchange = load
-  return { init : init }
+  //window.onhashchange = load
+  window.addEventListener("hashchange", (event) => load(event));
+  return {
+    route : route,
+    init : init,
+    overview : overview
+  }
 })()

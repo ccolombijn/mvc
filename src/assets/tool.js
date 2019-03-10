@@ -7,26 +7,25 @@ const tool = (function() {
   * make
   tool.make( [ 'div', { id : 'id', class : 'class'}, 'content ', [ 'a', { href : 'https://developer.mozilla.org/' }, 'link' ] ] )
   */
-  function make( tag, callback ){
-    const isArray = ( array ) => Object.prototype.toString.call( array ) === '[object Array]'
-    if ( !isArray( tag ) ) return make.call( this, Array.prototype.slice.call( arguments ) )
-    let name = tag[0],
-        attributes = tag[1],
+  function make( args ){
+    let isArray = ( array ) => Object.prototype.toString.call( array ) === '[object Array]'
+    if ( !isArray( args ) ) return make.call( this, Array.prototype.slice.call( arguments ) )
+    let name = args[0],
+        attributes = args[1],
         element = document.createElement( name ),
         start = 1
-
     if ( typeof attributes === 'object' && attributes !== null && !isArray( attributes ) ) {
       for ( let attribute in attributes ) element[ attribute ] = attributes[ attribute]
       start = 2
     }
-    for ( let index = start; index < tag.length; index++ ) {
-      if( isArray( tag[ index ] ) ){
-        element.appendChild( tool.make( tag[ index ] ) )
+    for ( let index = start; index < args.length; index++ ) {
+      if( isArray( args[ index ] ) ){
+        element.appendChild( tool.make( args[ index ] ) )
       } else {
-        element.appendChild( document.createTextNode( tag[ index ] ) )
+        element.appendChild( document.createTextNode( args[ index ] ) )
+        //element.innerHTML = args[ index ]
       }
     }
-    if( callback ) callback()
     return element
   }
   /* ---------------------------------------------------------------------------
@@ -161,7 +160,7 @@ const tool = (function() {
     let data = args.data, key;
     args.key ? key = args.key : key = 'id'
     for( let item of data ){
-      let match = ( pointer ) => isNaN( pointer ) ?  item[ key ] : parseInt( item[ key ] )
+      let match = (pointer) => isNaN( pointer ) ?  item[ key ] : item[ key ]/1
       if( match( args.match ) === args.match ) return item
     }
   }
@@ -208,8 +207,6 @@ const tool = (function() {
     response : response,
     xhr : xhr,
     fetchXhr : fetchXhr,
-    formData : formData,
-    get : get,
-    getAll : getAll
+    formData : formData
   }
 })()

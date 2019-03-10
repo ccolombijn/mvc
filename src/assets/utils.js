@@ -29,15 +29,6 @@ const utils = (function(){
   format = (str) => {
     return str.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/(?:\r\n|\r|\n)/g, '<br>');
   },
-  args = ( args, func ) => {
-    if(utils.obj(args).properties.length > 0){
-      const obj = {}, params = utils.params(func)
-      for(let item in params){
-        obj[params[item]] = args[item]
-      }
-      return obj
-    }
-  },
   occurence = (str,find) => (str.match(new RegExp(`${find}`,'g')) || []).length;
   return{
     getRandomInt : getRandomInt,
@@ -45,7 +36,6 @@ const utils = (function(){
     params : params,
     elements : elements,
     format : format,
-    args : args,
     occurence : occurence
   }
 })()
