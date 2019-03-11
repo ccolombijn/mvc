@@ -12,15 +12,15 @@ const UI = (() => {
     overviewHeaderRow = _.make( [ 'tr' ] ),
     overviewBody = _.make( [ 'tbody' ] ),
     overviewTitle = _.make( [ 'h2', `${args.model.length} items` ] );
-    args.columns = utils.obj(args.columns);
-    for( let header of args.columns.properties) {
+    args.fields = utils.obj(args.fields);
+    for( let header of args.fields.properties) {
       view.set( overviewHeaderRow, _.make( [ 'th', header ]) );
     }
     view.set( overviewHeader, overviewHeaderRow );
     view.set( overviewTable, overviewHeader );
     for( let entry of args.model ){
       let overviewRow = _.make( [ 'tr' ] );
-      for( let item of args.columns.values){
+      for( let item of args.fields.values){
         let overviewRowField = _.make( [ 'td'] )
         view.set( overviewRowField, item(entry) )
         view.set( overviewRow, overviewRowField )

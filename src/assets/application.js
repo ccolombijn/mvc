@@ -38,10 +38,10 @@ const application = (function(){
     ? targetElement = args.target
     : targetElement = applicationModule.config.main;
     window[exc][fn]({
-      module : args.module,
-      columns : args.columns,
-      headers : args.headers,
-      model : model.data[args.module],
+      component : args.component,
+      fields : args.fields,
+      controllers : args.controllers,
+      model : model.data[args.component],
       config : applicationModule.config,
       target : targetElement
     })
