@@ -32,29 +32,24 @@ const application = (function(){
     nav()
     load()
   },
-  overview = ( args ) => {
-    //view.set( applicationModule.config.main,
+  call = ( exc, fn, args ) => {
     let targetElement
     args.target
     ? targetElement = args.target
     : targetElement = applicationModule.config.main;
-
-
-      UI.overview({
-        module : args.module,
-        columns : args.columns,
-        headers : args.headers,
-        model : model.data[args.module],
-        config : applicationModule.config,
-        target : targetElement
-      })
-
+    window[exc][fn]({
+      module : args.module,
+      columns : args.columns,
+      headers : args.headers,
+      model : model.data[args.module],
+      config : applicationModule.config,
+      target : targetElement
+    })
   }
-  //window.onhashchange = load
-  window.addEventListener("hashchange", (event) => load(event));
+  controller.add( window, "hashchange", (event) => load(event) );
   return {
     route : route,
     init : init,
-    overview : overview
+    call : call
   }
 })()

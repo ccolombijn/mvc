@@ -84,10 +84,15 @@ const view = (function(){
 
   //...........................................................................
 
-      set = function( _element, content ){
-        if( typeof content === 'object' ) content = content.innerHTML
-        element( _element ).innerHTML = content
-      },
+  set = function( _element, content ){
+    if( typeof _element === 'string' ) _element = element( _element )
+    if( typeof content === 'object' ) {
+      _element.appendChild( content )
+    }else if(typeof content === 'string'){
+      _element.innerHTML = content
+    }
+
+  },
 
   //...........................................................................
 
@@ -144,20 +149,20 @@ const controller = (function(){
   //...........................................................................
 
   add = function( element, action, callback ){
-
-    view.element(element ).addEventListener( action, ( event ) => {
+    if( typeof element === 'string' ) element = view.element( element )
+    element.addEventListener( action, ( event ) => {
       events.push( event )
       event.preventDefault()
       event.stopPropagation();
       callback( event )
-      //receptor( event )
+      receptor( event )
     })
   },
   //...........................................................................
 
   receptor = function(event) {
     const component = event.target.id; // id of element added to controller acts as trigger to component to receptor
-    for (let action of this.actions) {
+    for (let action of actions) {
       if (action.component === component) action.do();
     }
   },

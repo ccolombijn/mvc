@@ -85,8 +85,13 @@ const view = (function(){
   //...........................................................................
 
       set = function( _element, content ){
-        if( typeof content === 'object' ) content = content.innerHTML
-        element( _element ).innerHTML = content
+
+        if( typeof content === 'object' ) {
+          _element.appendChild( content )
+        }else if(typeof content === 'string'){
+          _element.innerHTML = content
+        }
+
       },
 
   //...........................................................................
