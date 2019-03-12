@@ -179,6 +179,7 @@ const examples = (function(){
 
                   const task = view.add( 'list', 'div',  { id : item.id } ) // add new element to 'list' in view
                   const check = view.add( task, 'input', { 'type' : 'checkbox' } ) // add new element to task
+
                   controller.add( check, 'click', done )
                   if( item.done ){
                     view.attr( task, {'style': 'text-decoration: line-through' } )

@@ -27,7 +27,7 @@ const api = (function(){
 
   const connection = mysql.createConnection( config.db )
   const requests = [
-    { table : '', key : '' }
+    { table : 'questions', key : 'id' }
   ]
   for( let request of requests ){
     let table = request.table
