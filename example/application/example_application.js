@@ -27,6 +27,7 @@ const exampleApplication = (() => {
       }
     }
     const overview = () => application.call('UI','overview',{
+      component : 'items',
       fields : {
         'Name' : (item) => item.name,
         'Category' : (item) => getCategory( item.category )
@@ -34,7 +35,8 @@ const exampleApplication = (() => {
     });
     return {
       label : 'Main',
-      overview : overview
+      overview : overview,
+      default : overview
     }
   }
   const secondary = () => {
@@ -45,12 +47,14 @@ const exampleApplication = (() => {
 
     return{
       label : 'Secondary',
-      overview : overview
+      overview : overview,
+      default : overview
     }
   }
   return {
     config : config,
-    main : main
+    main : main,
+    default : main
   }
 })()
 application.init( exampleApplication );

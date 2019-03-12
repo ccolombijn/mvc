@@ -6,7 +6,9 @@ const application = (function(){
     if( event ){ // event is only provided by window.hashchange, not on init
 
     }
-    if(route){
+    
+    if(!route()[0] === ''){
+
       route()[1]
       ? applicationModule[route()[0]]()[route()[1]](route()[2])
       : applicationModule[route()[0]].default()
