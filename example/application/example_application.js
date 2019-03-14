@@ -25,7 +25,7 @@ const exampleApplication = (() => {
       for( let category of model.data.category ){
         if( id === category.id ) return category
       }
-    }
+    }/*
     const overview = () => application.call('UI','overview',{
       component : 'items',
       fields : {
@@ -33,6 +33,9 @@ const exampleApplication = (() => {
         'Category' : (item) => getCategory( item.category )
       }
     });
+    */
+
+    const overview = () => console.log('overview')
     return {
       label : 'Main',
       overview : overview,
