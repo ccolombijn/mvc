@@ -29,6 +29,26 @@ const utils = (function(){
   format = (str) => {
     return str.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/(?:\r\n|\r|\n)/g, '<br>');
   },
+  isNode = (o) => {
+    return (
+      typeof Node === "object" ? o instanceof Node :
+      o && typeof o === "object" && typeof o.nodeType === "number" && typeof o.nodeName==="string"
+    );
+  },
+
+  //Returns true if it is a DOM element
+  isElement = (o) => {
+    return (
+      typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
+      o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
+    );
+  },
+  formData = ( form ) => {
+    let data = {},
+    formData = new FormData( form )
+    for( let item of formData.entries() ) data[ item[0] ] = item[1]
+    return data
+  },
   occurence = (str,find) => (str.match(new RegExp(`${find}`,'g')) || []).length;
   return{
     getRandomInt : getRandomInt,
@@ -36,6 +56,9 @@ const utils = (function(){
     params : params,
     elements : elements,
     format : format,
+    isNode : isNode,
+    isElement : isElement,
+    formData : formData,
     occurence : occurence
   }
 })()

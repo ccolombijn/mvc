@@ -1,39 +1,52 @@
 'use strict'
 const UI = (() => {
 
-  const _ = tool
+  const make = tool.make
+  const set = view.set
+  const add = view.add
   return {
-    element : {},
+
+  //...........................................................................
+
     overview : (args) => {
-      const overviewTable = _.make( [
-        'table', { id : `overview_table_${args.module}`}
+      const overviewTable = make( [
+        'table', { id : `overview_table_${args.component}`}
       ] ),
-      overviewHeader = _.make( [ 'thead' ] ),
-      overviewHeaderRow = _.make( [ 'tr' ] ),
-      overviewBody = _.make( [ 'tbody' ] ),
-      overviewTitle = _.make( [ 'h2', `${args.model.length} items` ] );
+      overviewHeader = make( [ 'thead' ] ),
+      overviewHeaderRow = make( [ 'tr' ] ),
+      overviewBody = make( [ 'tbody' ] ),
+      overviewTitle = make( [ 'h2', `${args.model.length} items` ] );
+
       args.fields = utils.obj(args.fields);
-      for( let header of args.fields.properties) {
-        view.set( overviewHeaderRow, _.make( [ 'th', header ]) );
-      }
-      view.set( overviewHeader, overviewHeaderRow );
-      view.set( overviewTable, overviewHeader );
+      for( let header of args.fields.properties) set( overviewHeaderRow, make( [ 'th', header ]) );
+      set( overviewTable,
+        set( overviewHeader, overviewHeaderRow )
+      );
+
       for( let entry of args.model ){
-        let overviewRow = _.make( [ 'tr' ] );
+        let overviewRow = make( [ 'tr', { id : entry.id } ] );
+        if( args.controller ) controller.add(overviewRow,'click',args.controller)
         for( let item of args.fields.values){
-          let overviewRowField = _.make( [ 'td'] )
-          view.set( overviewRowField, item(entry) )
-          view.set( overviewRow, overviewRowField )
+          let overviewRowField = make( [ 'td'] )
+          add( overviewRow,
+            set( overviewRowField, item(entry) )
+          );
         }
-        view.set( overviewBody, overviewRow )
+        add( overviewBody, overviewRow )
       }
-      view.set( overviewTable, overviewBody )
-      view.set( args.target, overviewTable )
 
+      set( args.target, '')
+      set( args.target, overviewTitle )
+      set( args.target,
+        set( overviewTable, overviewBody )
+      )
     },
-    add : (args,callback) => {
 
-    },
+  //...........................................................................
+
+    add : () => {},
+  //...........................................................................
+
     edit : () =>{},
     remove : () =>{}
   }

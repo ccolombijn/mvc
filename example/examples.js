@@ -4,7 +4,6 @@ const examples = (function(){
 
   const modules = {},
 //...........................................................................
-
   instantUpdate = function(input, output) {
     const module = (args) => {
 
@@ -14,12 +13,8 @@ const examples = (function(){
           // update output innerHTML with input value
           args.output.innerHTML = args.input.value;
       })
-
     }
-
-
     if( arguments[0] ) return module(utils.args( arguments, this.instantUpdate))
-
     return{
 
       label : 'Instant Update',
@@ -179,18 +174,16 @@ const examples = (function(){
 
                   const task = view.add( 'list', 'div',  { id : item.id } ) // add new element to 'list' in view
                   const check = view.add( task, 'input', { 'type' : 'checkbox' } ) // add new element to task
-
                   controller.add( check, 'click', done )
-                  if( item.done ){
-                    view.attr( task, {'style': 'text-decoration: line-through' } )
-                    check.checked = true
-                  }
                   //console.log( view.elements )
                   const label =  view.add( task, 'label', { 'for' : check.id } , `${item.task} (${item.priority}) ` )
                   controller.add( view.add( task, 'button',{class:'btn'}, '+' ), 'click', priorityUp )
                   controller.add( view.add( task, 'button',{class:'btn'}, '-' ), 'click', priorityDown )
                   controller.add( view.add( task, 'button',{class:'btn'}, 'x' ), 'click', deleteTask )
-
+                  if( item.done ){
+                    view.attr( label, {'style': 'text-decoration: line-through' } )
+                    check.checked = true
+                  }
 
                 }
               },

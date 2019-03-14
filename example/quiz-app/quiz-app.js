@@ -1,14 +1,16 @@
-const exampleApplication = (() => {
+'use strict'
+const quizApp = (function(){
   const config = {
     main : 'main#main',
     menu : 'ul#menu',
-    default : 'main'
+    default : 'start'
   }
   const call = application.call;
 
   //----------------------------------------------------------------------------
+  const start = () => {
 
-  const main = (() => {
+
     //model.apiRequest({component:'items'})
     model.data['items'] = [
       { id : 0, name : 'example #0', category: 2 },
@@ -45,33 +47,19 @@ const exampleApplication = (() => {
       }
     });
 
-    // .........................................................................
+  // .........................................................................
 
     return {
-      label : 'Main',
-      overview : overview,
-      default : 'overview'
-    }
-  })()
-
-  //----------------------------------------------------------------------------
-
-  const secondary = (() => {
-    const overview = () =>{}
-
-    return{
-      label : 'Secondary',
+      label : 'Start',
       overview : overview,
       default : overview
     }
-  })()
-
-  //----------------------------------------------------------------------------
+  }
 
   return {
     config : config,
-    main : main,
-    secondary : secondary
+    start : start
   }
+
 })()
 application.init( exampleApplication );

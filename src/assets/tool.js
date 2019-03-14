@@ -160,7 +160,7 @@ const tool = (function() {
     let data = args.data, key;
     args.key ? key = args.key : key = 'id'
     for( let item of data ){
-      let match = (pointer) => isNaN( pointer ) ?  item[ key ] : item[ key ]/1
+      let match = (pointer) => isNaN( pointer ) ?  item[ key ] : parseInt(item[ key ])
       if( match( args.match ) === args.match ) return item
     }
   }
