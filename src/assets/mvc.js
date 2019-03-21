@@ -27,14 +27,17 @@ const model = (function(){
          if( !args ) args = {}
          if( !args.type ) args[ 'type' ] = 'GET'
          if( !args.status ) args[ 'status' ] = 200
-         if( !callback ) callback = response;
+
          xhr.addEventListener( 'load',  ( event ) => {
            if ( xhr.readyState === 4 && xhr.status === args.status ) {
              data[args.component] = JSON.parse(event.target.responseText)
-             callback( event, args )
+             if(callback) callback( event, args )
            }
          })
-         xhr.open( args.type, `api/${args.component}`, true )
+         // xhr.open( args.type, `http://${application.apiBasePath()}${args.component}`, true )
+         // console.log(application.apiBasePath())
+         xhr.open( args.type, `http://${args.apiBasePath}/${args.component}`, true )
+         xhr.open( args.type, `http://localhost:8081/api/${args.component}`, true )
          xhr.send( args.data )
        }
 
@@ -151,53 +154,5 @@ const view = (function(){
     set : set,
     txt : txt,
     attr : attr
-  }
-})()
-// -----------------------------------------------------------------------------
-// controller
-const controller = (function(){
-
-  const actions = [],
-  events = [],
-
-  action = (args)=>actions.push(args),
-  //...........................................................................
-
-  add = function( element, action, callback ){
-    if( typeof element === 'string' ) element = view.element( element )
-    element.addEventListener( action, ( event ) => {
-      events.push( event )
-      event.preventDefault()
-      event.stopPropagation();
-      callback( event )
-      receptor( event )
-    })
-  },
-  //...........................................................................
-
-  receptor = function(event) {
-    const component = event.target.id; // id of element added to controller acts as trigger to component to receptor
-    for (let action of actions) {
-      if (action.component === component) action.do();
-    }
-  },
-
-  //...........................................................................
-
-  component = function(element, event, action) {
-    actions.push({ component: element.id, event : event, do: action });
-  }
-
-  //...........................................................................
-  get = function(event){
-    for( item of events ){
-      if( item === event ) return item
-    }
-  }
-  return {
-    actions : actions,
-    events : events,
-    add : add,
-    component : component
   }
 })()

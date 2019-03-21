@@ -1,77 +1,110 @@
 const exampleApplication = (() => {
   const config = {
-    main : 'main#main',
+    main : 'div#main',
     menu : 'ul#menu',
-    default : 'main'
-  }
-  const call = application.call;
+    default : 'main',
+    api : 'localhost:8081/api',
+    components : [
+      { endpoint : 'products' },
+      { endpoint : 'categories' }
+     ]
+  },
+  //shorthands
+  make = tool.make,
+  obj = utils.obj,
+  element = view.element,
+  set = view.set,
+  call = application.call,
+  hook = application.hook,
+  before = application.before,
+  data = model.data,
+  get = model.get,
+  overview = (args) => call('UI','overviewTable',args);
+
+  hook( 'UI', 'overviewTable' , () => {
+    // hook function to any call instance of UI.overviewTable
+    console.log('UI.overviewTable call hook')
+  })
+
+  before( 'UI', 'overviewTable' , () => {
+    // before function to any call instance of UI.overviewTable
+    console.log('UI.overviewTable call before')
+  })
 
   //----------------------------------------------------------------------------
 
-  const main = (() => {
-    //model.apiRequest({component:'items'})
-    model.data['items'] = [
-      { id : 0, name : 'example #0', category: 2 },
-      { id : 1, name : 'example #1', category: 0 },
-      { id : 2, name : 'example #2', category: 1 },
-      { id : 3, name : 'example #3', category: 1 },
-      { id : 4, name : 'example #4', category: 2 },
-      { id : 5, name : 'example #5', category: 0 },
-      { id : 6, name : 'example #6', category: 1 }
-    ]
-    //model.apiRequest({component:'category'})
-    model.data['category'] = [
-      {id : 0, category : 'category #1'},
-      {id : 1, category : 'category #2'},
-      {id : 2, category : 'category #3'}
-    ]
+  const main = () => {
 
-    const getCategory = (id) => {
-      for( let category of model.data.category ){
-        if( id === category.id ) return category
-      }
-    }
+    // display product dummmy data
+    const component = 'products',
+          //getCategory = (id) => get( id,'categories'),
+          //getProduct = (id) =>  get( id,'products'),
 
     // .........................................................................
 
-    const overview = () => call('UI','overview',{
-      component : 'items',
+
+    overviewProducts = () => overview({
+      title : 'Products',
+      component : component, // data model component
       controller : (event) => {
-        console.log(`row #${event.target.parentElement.id} clicked`)
+        // controller event ; addEventListener function added to overviewTable row click event
+        console.log( get( event.target.parentElement.id, component ).description ) // display description in console
       },
       fields : {
-        'Name' : (item) => item.name,
-        'Category' : (item) => getCategory( item.category ).category
+        'Name' : (item) => make( [ 'a', { href : `${config.navMenuItemPrefix}${component}/view/${item.id}` },item.name ] ),
+        'Price' : (item) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'EUR' }).format(item.price),
+        'Category' : (item) => get( item.category_id, 'categories' ).name
+      },
+      callback : () => {
+        console.log('overviewProducts is loaded')
       }
-    });
+    }),
+
+    // .........................................................................
+
+    viewProduct = (id) =>{
+      const viewProductElement = element('viewProduct'),
+      product = obj(get(id,component))
+      viewProductElement.id = `product_${id}`
+      for( let value of product.properties ){
+        if( element(`product_${value}`) ) element(`product_${value}`).innerHTML = get(id,component)[ value ]
+      }
+      element('productImg').attr('src',`img/${id}.jpg`)
+      set( config.main, viewProductElement )
+    }
 
     // .........................................................................
 
     return {
       label : 'Main',
-      overview : overview,
-      default : 'overview'
+      overview : overviewProducts,
+      view : viewProduct,
+      default : overviewProducts
     }
-  })()
+  }
 
   //----------------------------------------------------------------------------
 
-  const secondary = (() => {
-    const overview = () =>{}
+  const secondary = () => {
+    const overview = () =>{
+      set(config.main,'')
+    }
 
     return{
       label : 'Secondary',
       overview : overview,
       default : overview
     }
-  })()
+  }
 
   //----------------------------------------------------------------------------
 
   return {
     config : config,
+    components : model.components,
     main : main,
     secondary : secondary
   }
 })()
+
 application.init( exampleApplication );

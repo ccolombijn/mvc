@@ -15,7 +15,12 @@ const tool = (function() {
         element = document.createElement( name ),
         start = 1
     if ( typeof attributes === 'object' && attributes !== null && !isArray( attributes ) ) {
-      for ( let attribute in attributes ) element[ attribute ] = attributes[ attribute]
+
+      for ( let attribute in attributes ) {
+
+        //element[ attribute ] = attributes[ attribute]
+        element.setAttribute( attribute, attributes[ attribute])
+      }
       start = 2
     }
     for ( let index = start; index < args.length; index++ ) {
